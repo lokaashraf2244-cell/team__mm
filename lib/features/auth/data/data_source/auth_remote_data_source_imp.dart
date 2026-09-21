@@ -30,9 +30,15 @@ class AuthDataSourceImpl implements AuthRemoteDataSource {
   }
 
   @override
-  Future<Either<Failure, dynamic>> register(
-      SignupRequest request,
-      ) async {
+  Future<Either<Failure, dynamic>> register(SignupRequest request) async {
+    print('REGISTER DATA:');
+    print({
+      'firstName': request.firstName,
+      'lastName': request.lastName,
+      'email': request.email,
+      'password': request.password,
+    });
+
     final response = await apiConsumer.post(
       path: ApiConstants.register,
       data: {
@@ -42,6 +48,8 @@ class AuthDataSourceImpl implements AuthRemoteDataSource {
         'password': request.password,
       },
     );
+
+    print('REGISTER RESPONSE: $response');
 
     return response;
   }

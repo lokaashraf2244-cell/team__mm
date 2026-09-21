@@ -9,13 +9,18 @@ class ProductDataSourceImpl implements ProductDataSource {
 
   @override
   Future<Either<Failure, Map<String, dynamic>>> getProducts() async {
+    print('========== PRODUCT REQUEST ==========');
+    print('PATH: /api/products');
+
     final response = await apiConsumer.get(
       path: '/api/products',
     );
 
+    print('PRODUCT RESPONSE: $response');
+    print('=====================================');
+
     return response;
   }
-
   @override
   Future<Either<Failure, Map<String, dynamic>>> getProductDetails({
     required String productId,

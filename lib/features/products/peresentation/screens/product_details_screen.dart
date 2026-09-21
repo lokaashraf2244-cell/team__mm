@@ -28,8 +28,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+
         title: const Text('Product Details'),
         centerTitle: true,
+
       ),
       body: BlocBuilder<ProductCubit, ProductState>(
         builder: (context, state) {
@@ -61,7 +63,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         Text(
                           details.name,
                           style: const TextStyle(
-                            fontSize: 22,
+                            fontSize: 27,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -71,7 +73,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         Text(
                           details.description,
                           style: const TextStyle(
-                            fontSize: 16,
+                            fontSize: 20,
                           ),
                         ),
 
@@ -80,7 +82,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         Text(
                           '${details.price} EGP',
                           style: const TextStyle(
-                            fontSize: 18,
+                            fontSize: 19,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -92,6 +94,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           height: 55,
                           child: FilledButton(
                             onPressed: () {},
+                            style: FilledButton.styleFrom(
+                              backgroundColor: const Color(0xFF0B1F3A),
+                              foregroundColor: Colors.white,
+                            ),
                             child: const Text('Add To Cart'),
                           ),
                         ),

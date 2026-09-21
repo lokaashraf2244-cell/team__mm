@@ -15,9 +15,65 @@ import 'package:mm_2/features/products/domain/usecase/get_product_details.dart';
 
 import 'package:mm_2/features/products/peresentation/cubit/product_cubit.dart';
 
+import 'package:mm_2/features/auth/data/data_source/auth_remote_data_source.dart';
+import 'package:mm_2/features/auth/data/data_source/auth_remote_data_source_imp.dart';
+import 'package:mm_2/features/auth/data/repos/auth_repo_imp.dart';
+
+import 'package:mm_2/features/auth/domain/reposatories/auth_repo.dart';
+import 'package:mm_2/features/auth/domain/usecase/login.dart';
+import 'package:mm_2/features/auth/domain/usecase/signup.dart';
+import 'package:mm_2/features/auth/domain/usecase/verify_email.dart';
+import 'package:mm_2/features/auth/domain/usecase/resend_otp.dart';
+
+import 'package:mm_2/features/auth/presentation/cubit/auth_cubit.dart';
 final getIt = GetIt.instance;
 
 Future<void> initDependencies() async {
+
+  getIt.registerLazySingleton<AuthRemoteDataSource>(
+        () => AuthDataSourceImpl(
+      getIt<ApiConsumer>(),
+    ),
+  );
+
+  getIt.registerLazySingleton<AuthRepository>(
+        () => AuthRepositoryImpl(
+      remoteDataSource: getIt<AuthRemoteDataSource>(),
+    ),
+  );
+
+  getIt.registerLazySingleton<Login>(
+        () => Login(
+      getIt<AuthRepository>(),
+    ),
+  );
+
+  getIt.registerLazySingleton<SignUp>(
+        () => SignUp(
+      getIt<AuthRepository>(),
+    ),
+  );
+
+  getIt.registerLazySingleton<VerifyEmail>(
+        () => VerifyEmail(
+      getIt<AuthRepository>(),
+    ),
+  );
+
+  getIt.registerLazySingleton<ResendOtp>(
+        () => ResendOtp(
+      getIt<AuthRepository>(),
+    ),
+  );
+
+  getIt.registerFactory<AuthCubit>(
+        () => AuthCubit(
+      loginUseCase: getIt<Login>(),
+      signUpUseCase: getIt<SignUp>(),
+      verifyEmailUseCase: getIt<VerifyEmail>(),
+      resendOtpUseCase: getIt<ResendOtp>(),
+    ),
+  );
 
   getIt.registerLazySingleton<Dio>(
         () => DioFactory.create(),
