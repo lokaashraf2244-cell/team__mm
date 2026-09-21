@@ -5,7 +5,7 @@ import 'signupscreen.dart';
 import 'package:mm_2/core/cubit/theme/theme_cubit.dart';
 import 'package:mm_2/core/cubit/theme/theme_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:mm_2/features/auth/presentation/screens/settings_screen.dart';
 
 class loginscreen extends StatefulWidget{
   const loginscreen({super.key});

@@ -59,7 +59,7 @@ class _VerificationPageState extends State<VerificationPage> {
                     height: 180,
                     width: 180,
                     child: Image.asset(
-                      'Assets2/images/WhatsApp.jpeg',
+                      'Assets2/images/signupimage.jpeg',
                       fit: BoxFit.contain,
                     ),
                   ),
