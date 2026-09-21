@@ -52,6 +52,10 @@ class AuthCubit extends Cubit<AuthState> {
         emit(AuthFailure(failure.toString()));
       },
           (response) {
+        print('========== LOGIN RESPONSE ==========');
+        print(response);
+        print('====================================');
+
         emit(AuthSuccess());
       },
     );

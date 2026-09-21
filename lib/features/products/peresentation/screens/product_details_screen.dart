@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mm_2/features/products/peresentation/cubit/product_cubit.dart';
 import 'package:mm_2/features/products/peresentation/cubit/product_state.dart';
+import 'package:mm_2/features/auth/presentation/screens/settings_screen.dart';
 class ProductDetailsScreen extends StatefulWidget {
   const ProductDetailsScreen({
     super.key,
@@ -28,10 +29,20 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.settings),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const SettingsScreen(),
+              ),
+            );
+          },
+        ),
 
         title: const Text('Product Details'),
         centerTitle: true,
-
       ),
       body: BlocBuilder<ProductCubit, ProductState>(
         builder: (context, state) {

@@ -1,0 +1,32 @@
+
+part of 'categories_model.dart';
+
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+_CategoriesResponse _$CategoriesResponseFromJson(Map<String, dynamic> json) =>
+    _CategoriesResponse(
+      categories:
+          (json['categories'] as List<dynamic>?)
+              ?.map((e) => Category.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
+    );
+
+Map<String, dynamic> _$CategoriesResponseToJson(_CategoriesResponse instance) =>
+    <String, dynamic>{'categories': instance.categories};
+
+_Category _$CategoryFromJson(Map<String, dynamic> json) => _Category(
+  id: json['id'] as String,
+  name: json['name'] as String,
+  description: json['description'] as String,
+  coverPictureUrl: json['coverPictureUrl'] as String,
+);
+
+Map<String, dynamic> _$CategoryToJson(_Category instance) => <String, dynamic>{
+  'id': instance.id,
+  'name': instance.name,
+  'description': instance.description,
+  'coverPictureUrl': instance.coverPictureUrl,
+};

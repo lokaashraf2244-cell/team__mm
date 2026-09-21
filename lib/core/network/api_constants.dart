@@ -8,8 +8,10 @@ class ApiConstants {
   static const String resendOtp = '/api/auth/resend-otp';
 
   static const String products = '/api/products';
+  static const String categories = '/api/categories';
+
 
   static String productDetails(String id) {
     return '/api/products/$id';
   }
-}
+} 
