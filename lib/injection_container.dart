@@ -14,7 +14,7 @@ import 'package:mm_2/features/products/domain/usecase/get_product_details.dart';
 import 'package:mm_2/features/products/peresentation/cubit/product_cubit.dart';
 
 import 'package:mm_2/features/categories/data/data_source/categories_data_source.dart';
-
+import 'package:mm_2/features/categories/data/data_source/categories_data_source_imp.dart';
 import 'package:mm_2/features/categories/data/repos/categories_repo_imp.dart';
 import 'package:mm_2/features/categories/domain/reposatories/categories_repo.dart';
 import 'package:mm_2/features/categories/presentation/cubit/categories_cubit.dart';
@@ -63,6 +63,12 @@ Future<void> initDependencies() async {
     ),
   );
 
+  getIt.registerLazySingleton<CategoriesDataSource>(
+        () => CategoryDataSourceImpl(
+      getIt<ApiConsumer>(),
+    ),
+  );
+
   getIt.registerLazySingleton<Categoriesrepo>(
         () => CategoriesRepoImpl(
       categoriesDataSource: getIt<CategoriesDataSource>(),
@@ -74,4 +80,6 @@ Future<void> initDependencies() async {
       categoriesRepo: getIt<Categoriesrepo>(),
     ),
   );
+
+
 }

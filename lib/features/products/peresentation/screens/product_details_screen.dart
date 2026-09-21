@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mm_2/features/products/peresentation/cubit/product_cubit.dart';
 import 'package:mm_2/features/products/peresentation/cubit/product_state.dart';
+import 'package:mm_2/features/auth/presentation/screens/settings_screen.dart';
 class ProductDetailsScreen extends StatefulWidget {
   const ProductDetailsScreen({
     super.key,
@@ -28,6 +29,18 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.settings),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const SettingsScreen(),
+              ),
+            );
+          },
+        ),
+
         title: const Text('Product Details'),
         centerTitle: true,
       ),
@@ -61,7 +74,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         Text(
                           details.name,
                           style: const TextStyle(
-                            fontSize: 22,
+                            fontSize: 27,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -71,7 +84,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         Text(
                           details.description,
                           style: const TextStyle(
-                            fontSize: 16,
+                            fontSize: 20,
                           ),
                         ),
 
@@ -80,7 +93,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         Text(
                           '${details.price} EGP',
                           style: const TextStyle(
-                            fontSize: 18,
+                            fontSize: 19,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -92,6 +105,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           height: 55,
                           child: FilledButton(
                             onPressed: () {},
+                            style: FilledButton.styleFrom(
+                              backgroundColor: const Color(0xFF0B1F3A),
+                              foregroundColor: Colors.white,
+                            ),
                             child: const Text('Add To Cart'),
                           ),
                         ),

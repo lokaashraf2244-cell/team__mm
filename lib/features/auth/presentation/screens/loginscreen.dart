@@ -5,7 +5,7 @@ import 'signupscreen.dart';
 import 'package:mm_2/core/cubit/theme/theme_cubit.dart';
 import 'package:mm_2/core/cubit/theme/theme_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mm_2/features/auth/presentation/screens/settings_screen.dart';
+import 'package:mm_2/features/products/peresentation/screens/products_screen.dart';
 
 class loginscreen extends StatefulWidget{
   const loginscreen({super.key});
@@ -148,18 +148,7 @@ class _loginscreenState extends State<loginscreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const SizedBox(height: 8),
-                          CustomTextField(
-                            controller: namecontroller,
-                            hintText: 'Enter your name',
-                            keyboardType: TextInputType.name,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please enter your name';
-                              }
-                              return null;
-                            },
-                          ),
+
 
                           const SizedBox(height: 18),
                           Text(
@@ -255,7 +244,12 @@ class _loginscreenState extends State<loginscreen> {
                       child: ElevatedButton(
                         onPressed: () {
                           if (formKey.currentState!.validate()) {
-                            print('Valid');
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const ProductsScreen(),
+                              ),
+                            );
                           }
                         },
                         style: ElevatedButton.styleFrom(

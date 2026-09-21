@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pinput/pinput.dart';
-import 'package:mm_2/core/cubit/theme/theme_cubit.dart';
-import 'package:mm_2/core/cubit/theme/theme_state.dart';
-
+import 'package:go_router/go_router.dart';
 class VerificationPage extends StatefulWidget {
   const VerificationPage({super.key});
 
@@ -36,33 +34,18 @@ class _VerificationPageState extends State<VerificationPage> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
 
-                  // ================= Theme Switch =================
-                  BlocBuilder<ThemeCubit, ThemeState>(
-                    builder: (context, state) {
-                      return Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Switch(
-                            value: state.isDark,
-                            onChanged: (value) {
-                              context.read<ThemeCubit>().switchtheme();
-                            },
-                          ),
-                        ],
-                      );
-                    },
-                  ),
 
                   const SizedBox(height: 10),
 
                   SizedBox(
-                    height: 180,
-                    width: 180,
+                    width: double.infinity,
+                    height: 300,
                     child: Image.asset(
-                      'Assets2/images/signupimage.jpeg',
+                      'Assets2/images/WhatsApp.jpeg',
                       fit: BoxFit.contain,
                     ),
                   ),
+
 
                   const SizedBox(height: 25),
 
@@ -70,7 +53,7 @@ class _VerificationPageState extends State<VerificationPage> {
                   Text(
                     'Verification',
                     style: TextStyle(
-                      fontSize: 24,
+                      fontSize: 27,
                       fontWeight: FontWeight.bold,
                       color: theme.textTheme.bodyLarge?.color,
                     ),
@@ -83,7 +66,7 @@ class _VerificationPageState extends State<VerificationPage> {
                     'Enter the verification code sent to your email',
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontSize: 15,
+                      fontSize: 19,
                       color: theme.textTheme.bodyMedium?.color,
                     ),
                   ),
@@ -121,8 +104,7 @@ class _VerificationPageState extends State<VerificationPage> {
                     child: ElevatedButton(
                       onPressed: () {
                         final otp = pinController.text;
-
-                        print(otp);
+                        context.push('/products');
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.blue,
@@ -134,7 +116,7 @@ class _VerificationPageState extends State<VerificationPage> {
                       child: const Text(
                         'Verify',
                         style: TextStyle(
-                          fontSize: 16,
+                          fontSize: 19,
                           fontWeight: FontWeight.bold,
                         ),
                       ),

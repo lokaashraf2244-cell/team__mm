@@ -17,10 +17,8 @@ void main() async {
     ),
   );
 }
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ThemeCubit, ThemeState>(
@@ -28,6 +26,13 @@ class MyApp extends StatelessWidget {
         return MaterialApp.router(
           debugShowCheckedModeBanner: false,
           routerConfig: AppRouter.appRouter,
+
+          theme: ThemeData.light(),
+          darkTheme: ThemeData.dark(),
+
+          themeMode: state.isDark
+              ? ThemeMode.dark
+              : ThemeMode.light,
         );
       },
     );

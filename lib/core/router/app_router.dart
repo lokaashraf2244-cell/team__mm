@@ -12,7 +12,9 @@ import 'package:mm_2/features/products/peresentation/screens/products_screen.dar
 import 'package:mm_2/features/products/peresentation/screens/product_details_screen.dart';
 
 import 'package:mm_2/features/products/peresentation/cubit/product_cubit.dart';
-
+import 'package:mm_2/features/auth/presentation/cubit/auth_cubit.dart';
+import 'package:mm_2/features/categories/presentation/cubit/categories_cubit.dart';
+import 'package:mm_2/features/categories/presentation/cubit/categories_cubit.dart';
 final navigatorKey = GlobalKey<NavigatorState>();
 
 class AppRouter {
@@ -25,7 +27,10 @@ class AppRouter {
         path: "/login",
         name: "login",
         builder: (context, state) {
-          return const loginscreen();
+          return BlocProvider<AuthCubit>(
+            create: (context) => getIt<AuthCubit>(),
+            child: const loginscreen(),
+          );
         },
       ),
 
@@ -47,8 +52,15 @@ class AppRouter {
 
       ShellRoute(
         builder: (context, state, child) {
-          return BlocProvider(
-            create: (context) => getIt<ProductCubit>(),
+          return MultiBlocProvider(
+            providers: [
+              BlocProvider<ProductCubit>(
+                create: (_) => getIt<ProductCubit>(),
+              ),
+              BlocProvider<CategoriesCubit>(
+                create: (_) => getIt<CategoriesCubit>(),
+              ),
+            ],
             child: child,
           );
         },
