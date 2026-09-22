@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-
 import 'package:mm_2/features/products/peresentation/cubit/product_cubit.dart';
 import 'package:mm_2/features/products/peresentation/cubit/product_state.dart';
-import 'package:mm_2/features/products/peresentation/screens/product_details_screen.dart';
 import 'package:mm_2/features/auth/presentation/screens/settings_screen.dart';
 import 'package:mm_2/features/categories/presentation/cubit/categories_cubit.dart';
 import 'package:mm_2/features/categories/presentation/cubit/categories_state.dart';
-
 import 'package:mm_2/injection_container.dart';
 
 class ProductsScreen extends StatelessWidget {
@@ -286,7 +283,7 @@ class _ProductsViewState extends State<_ProductsView> {
           ),
 
           CategoriesSuccessState(:final categories) => SizedBox(
-            height: 120,
+            height: 160,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.symmetric(
@@ -349,8 +346,8 @@ class _ProductsViewState extends State<_ProductsView> {
         child: Column(
           children: [
             Container(
-              width: 70,
-              height: 70,
+              width: 80,
+              height: 80,
 
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
@@ -366,7 +363,7 @@ class _ProductsViewState extends State<_ProductsView> {
                 child: imageUrl == null
                     ? const Icon(
                   Icons.apps,
-                  size: 30,
+                  size: 50,
                 )
                     : Image.network(
                   imageUrl,
@@ -375,7 +372,7 @@ class _ProductsViewState extends State<_ProductsView> {
                       (context, error, stackTrace) {
                     return const Icon(
                       Icons.image_not_supported,
-                      size: 30,
+                      size: 40,
                     );
                   },
                 ),
@@ -391,7 +388,7 @@ class _ProductsViewState extends State<_ProductsView> {
               textAlign: TextAlign.center,
 
               style: TextStyle(
-                fontSize: 13,
+                fontSize: 17,
                 fontWeight: isSelected
                     ? FontWeight.bold
                     : FontWeight.normal,

@@ -5,6 +5,7 @@ abstract class ApiConsumer {
   Future<Either<Failure, Map<String, dynamic>>> get({
     required String path,
     Map<String, dynamic>? queryParameters,
+    Map<String, dynamic>? headers,
   });
 
   Future<Either<Failure, Map<String, dynamic>>> post({

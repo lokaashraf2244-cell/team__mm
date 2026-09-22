@@ -50,7 +50,7 @@ class SettingsScreen extends StatelessWidget {
             child: Text(
               'Profile Settings',
               style: TextStyle(
-                color: Colors.blue,
+                color:  const Color(0xFF0B1F3A),
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
               ),

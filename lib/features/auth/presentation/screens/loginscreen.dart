@@ -253,7 +253,7 @@ class _loginscreenState extends State<loginscreen> {
                           }
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blue,
+                          backgroundColor:  const Color(0xFF0B1F3A),
                           foregroundColor: Colors.white,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
@@ -298,7 +298,7 @@ class _loginscreenState extends State<loginscreen> {
                             'Sign Up',
                             style: TextStyle(
                               fontSize: 13,
-                              color: Colors.blue,
+                              color: Color(0xFF0B1F3A),
                               fontWeight: FontWeight.bold,
                             ),
                           ),
