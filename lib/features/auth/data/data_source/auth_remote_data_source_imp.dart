@@ -1,5 +1,4 @@
 import 'package:dartz/dartz.dart';
-
 import 'package:mm_2/core/errors/failure.dart';
 import 'package:mm_2/core/network/api_constants.dart';
 import 'package:mm_2/core/network/api_consumer.dart';
@@ -68,7 +67,6 @@ class AuthDataSourceImpl implements AuthRemoteDataSource {
 
     return response;
   }
-
   @override
   Future<Either<Failure, dynamic>> resendOtp(
       ResendOtpRequest request,

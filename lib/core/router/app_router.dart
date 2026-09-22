@@ -10,11 +10,10 @@ import 'package:mm_2/features/auth/presentation/screens/verification_screen.dart
 
 import 'package:mm_2/features/products/peresentation/screens/products_screen.dart';
 import 'package:mm_2/features/products/peresentation/screens/product_details_screen.dart';
-
 import 'package:mm_2/features/products/peresentation/cubit/product_cubit.dart';
-import 'package:mm_2/features/auth/presentation/cubit/auth_cubit.dart';
+
 import 'package:mm_2/features/categories/presentation/cubit/categories_cubit.dart';
-import 'package:mm_2/features/categories/presentation/cubit/categories_cubit.dart';
+
 final navigatorKey = GlobalKey<NavigatorState>();
 
 class AppRouter {
@@ -22,15 +21,11 @@ class AppRouter {
     initialLocation: "/login",
 
     routes: [
-
       GoRoute(
         path: "/login",
         name: "login",
         builder: (context, state) {
-          return BlocProvider<AuthCubit>(
-            create: (context) => getIt<AuthCubit>(),
-            child: const loginscreen(),
-          );
+          return const loginscreen();
         },
       ),
 
@@ -41,43 +36,66 @@ class AppRouter {
           return const SignUpScreen();
         },
       ),
-
       GoRoute(
         path: "/verification",
         name: "verification",
+
         builder: (context, state) {
-          return const VerificationPage();
+
+          final email =
+              state.uri.queryParameters['email'] ?? '';
+
+          print(
+            'ROUTER RECEIVED EMAIL: $email',
+          );
+
+          return VerificationPage(
+            email: email,
+          );
         },
       ),
 
       ShellRoute(
-        builder: (context, state, child) {
+
+        builder:
+            (context, state, child) {
+
           return MultiBlocProvider(
             providers: [
+
               BlocProvider<ProductCubit>(
-                create: (_) => getIt<ProductCubit>(),
+                create: (_) =>
+                    getIt<ProductCubit>(),
               ),
+
               BlocProvider<CategoriesCubit>(
-                create: (_) => getIt<CategoriesCubit>(),
+                create: (_) =>
+                    getIt<CategoriesCubit>(),
               ),
             ],
+
             child: child,
           );
         },
+
         routes: [
 
           GoRoute(
             path: "/products",
             name: "products",
+
             builder: (context, state) {
               return const ProductsScreen();
             },
           ),
 
+
           GoRoute(
             path: "/product-details",
             name: "productDetails",
+
             builder: (context, state) {
+
               final String? id =
               state.uri.queryParameters['id'];
 
@@ -86,7 +104,6 @@ class AppRouter {
               );
             },
           ),
-
         ],
       ),
     ],
