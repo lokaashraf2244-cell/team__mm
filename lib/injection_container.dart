@@ -4,6 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:mm_2/core/network/api_consumer.dart';
 import 'package:mm_2/core/network/dio_consumer.dart';
 import 'package:mm_2/core/network/dio_factory.dart';
+
 import 'package:mm_2/features/products/data/data_source/product_remote_data_source.dart';
 import 'package:mm_2/features/products/data/data_source/product_remote_data_source_impl.dart';
 import 'package:mm_2/features/products/data/repos/product_repository_impl.dart';
@@ -11,11 +12,13 @@ import 'package:mm_2/features/products/domain/repositories/product_repository.da
 import 'package:mm_2/features/products/domain/usecase/get_products.dart';
 import 'package:mm_2/features/products/domain/usecase/get_product_details.dart';
 import 'package:mm_2/features/products/peresentation/cubit/product_cubit.dart';
+
 import 'package:mm_2/features/categories/data/data_source/categories_data_source.dart';
 import 'package:mm_2/features/categories/data/data_source/categories_data_source_imp.dart';
 import 'package:mm_2/features/categories/data/repos/categories_repo_imp.dart';
 import 'package:mm_2/features/categories/domain/reposatories/categories_repo.dart';
 import 'package:mm_2/features/categories/presentation/cubit/categories_cubit.dart';
+
 import 'package:mm_2/features/auth/data/data_source/auth_remote_data_source.dart';
 import 'package:mm_2/features/auth/data/data_source/auth_remote_data_source_imp.dart';
 import 'package:mm_2/features/auth/data/repos/auth_repo_imp.dart';
@@ -26,10 +29,15 @@ import 'package:mm_2/features/auth/domain/usecase/verify_email.dart';
 import 'package:mm_2/features/auth/domain/usecase/resend_otp.dart';
 import 'package:mm_2/features/auth/presentation/cubit/auth_cubit.dart';
 
+import 'package:mm_2/features/cart/data/data_source/cart_data_source.dart';
+import 'package:mm_2/features/cart/data/data_source/cart_data_source_imp.dart';
+import 'package:mm_2/features/cart/data/repos/cart_repo_imp.dart';
+import 'package:mm_2/features/cart/domain/repos/cart_repo.dart';
+import 'package:mm_2/features/cart/presentation/cubit/cart_cubit.dart';
+
 final getIt = GetIt.instance;
 
 Future<void> initDependencies() async {
-
   getIt.registerLazySingleton<Dio>(
         () => DioFactory.create(),
   );
@@ -131,6 +139,24 @@ Future<void> initDependencies() async {
       signUpUseCase: getIt<SignUp>(),
       verifyEmailUseCase: getIt<VerifyEmail>(),
       resendOtpUseCase: getIt<ResendOtp>(),
+    ),
+  );
+
+  getIt.registerLazySingleton<CartDataSource>(
+        () => CartDataSourceImpl(
+      getIt<ApiConsumer>(),
+    ),
+  );
+
+  getIt.registerLazySingleton<CartRepo>(
+        () => CartRepoImpl(
+      cartDataSource: getIt<CartDataSource>(),
+    ),
+  );
+
+  getIt.registerFactory<CartCubit>(
+        () => CartCubit(
+      cartRepo: getIt<CartRepo>(),
     ),
   );
 }

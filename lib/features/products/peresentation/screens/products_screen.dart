@@ -6,12 +6,15 @@ import 'package:mm_2/features/products/peresentation/cubit/product_state.dart';
 import 'package:mm_2/features/auth/presentation/screens/settings_screen.dart';
 import 'package:mm_2/features/categories/presentation/cubit/categories_cubit.dart';
 import 'package:mm_2/features/categories/presentation/cubit/categories_state.dart';
+import 'package:mm_2/features/cart/presentation/cubit/cart_cubit.dart';
+import 'package:mm_2/features/cart/presentation/cubit/cart_state.dart';
 import 'package:mm_2/injection_container.dart';
 
 class ProductsScreen extends StatelessWidget {
   const ProductsScreen({super.key});
 
-  static const String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyNTMyZGJlOS1iMGY2LTRjZTAtM2RkMC0wOGRmMTVkY2QxMGQiLCJqdGkiOiJkZTI5YTFjZi00OTViLTQ5NGItODkzOC1lZGQ0OTU5NjJlMDQiLCJlbWFpbCI6Imxva2EuYXNocmFmMjI0NEBnbWFpbC5jb20iLCJuYW1lIjoibG9rYSBhc2hyYWYiLCJyb2xlcyI6IiIsInBpY3R1cmUiOiIiLCJleHAiOjE3OTAyNDc5MjMsImlzcyI6ImVzaG9wLm5ldCIsImF1ZCI6ImVzaG9wLm5ldCJ9.qWgP9smtZUVgc"
+  static const String token =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyNTMyZGJlOS1iMGY2LTRjZTAtM2RkMC0wOGRmMTVkY2QxMGQiLCJqdGkiOiJkZTI5YTFjZi00OTViLTQ5NGItODkzOC1lZGQ0OTU5NjJlMDQiLCJlbWFpbCI6Imxva2EuYXNocmFmMjI0NEBnbWFpbC5jb20iLCJuYW1lIjoibG9rYSBhc2hyYWYiLCJyb2xlcyI6IiIsInBpY3R1cmUiOiIiLCJleHAiOjE3OTAyNDc5MjMsImlzcyI6ImVzaG9wLm5ldCIsImF1ZCI6ImVzaG9wLm5ldCJ9.qWgP9smtZUVgc"
       "mMLcMuyE59w0wOq6_qPWxMLt-qnOck";
 
   @override
@@ -21,10 +24,11 @@ class ProductsScreen extends StatelessWidget {
         BlocProvider<ProductCubit>(
           create: (_) => getIt<ProductCubit>(),
         ),
-
         BlocProvider<CategoriesCubit>(
-          create: (_) =>
-          getIt<CategoriesCubit>()..getCategories(),
+          create: (_) => getIt<CategoriesCubit>()..getCategories(),
+        ),
+        BlocProvider<CartCubit>(
+          create: (_) => getIt<CartCubit>(),
         ),
       ],
       child: const _ProductsView(),
@@ -55,7 +59,6 @@ class _ProductsViewState extends State<_ProductsView> {
       appBar: AppBar(
         backgroundColor: const Color(0xFF0B1F3A),
         centerTitle: true,
-
         leading: IconButton(
           icon: const Icon(
             Icons.settings,
@@ -70,7 +73,6 @@ class _ProductsViewState extends State<_ProductsView> {
             );
           },
         ),
-
         title: const Text(
           'ELORA Accessories',
           style: TextStyle(
@@ -78,17 +80,17 @@ class _ProductsViewState extends State<_ProductsView> {
             fontWeight: FontWeight.bold,
           ),
         ),
-
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              context.push('/cart');
+            },
             icon: const Icon(
               Icons.shopping_cart_outlined,
               color: Colors.white,
             ),
           ),
         ],
-
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1),
           child: Container(
@@ -97,167 +99,188 @@ class _ProductsViewState extends State<_ProductsView> {
           ),
         ),
       ),
-
-      body: BlocBuilder<ProductCubit, ProductState>(
-        builder: (context, state) {
-          return switch (state) {
-            ProductInitialState() => const SizedBox(),
-
-            ProductLoadingState() => const Center(
-              child: CircularProgressIndicator(),
-            ),
-
-            ProductFailureState(:final message) => Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(message),
-                  const SizedBox(height: 16),
-                  FilledButton(
-                    onPressed: () {
-                      context.read<ProductCubit>().fetchProducts();
-                    },
-                    child: const Text('Try Again'),
-                  ),
-                ],
+      body: BlocListener<CartCubit, CartState>(
+        listener: (context, state) {
+          if (state is CartAddSuccessState) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Product added to cart'),
+                backgroundColor: Color(0xFF0B1F3A),
               ),
-            ),
+            );
+          }
 
-            ProductSuccessState(:final products) => CustomScrollView(
-              slivers: [
-                SliverToBoxAdapter(
-                  child: _buildCategories(),
+          if (state is CartFailureState) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.message),
+              ),
+            );
+          }
+        },
+        child: BlocBuilder<ProductCubit, ProductState>(
+          builder: (context, state) {
+            return switch (state) {
+              ProductInitialState() => const SizedBox(),
+
+              ProductLoadingState() => const Center(
+                child: CircularProgressIndicator(),
+              ),
+
+              ProductFailureState(:final message) => Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(message),
+                    const SizedBox(height: 16),
+                    FilledButton(
+                      onPressed: () {
+                        context.read<ProductCubit>().fetchProducts();
+                      },
+                      child: const Text('Try Again'),
+                    ),
+                  ],
                 ),
+              ),
 
-                SliverPadding(
-                  padding: const EdgeInsets.all(12),
-                  sliver: SliverGrid(
-                    delegate: SliverChildBuilderDelegate(
-                          (context, index) {
-                        final product = products[index];
+              ProductSuccessState(:final products) => CustomScrollView(
+                slivers: [
+                  SliverToBoxAdapter(
+                    child: _buildCategories(),
+                  ),
+                  SliverPadding(
+                    padding: const EdgeInsets.all(12),
+                    sliver: SliverGrid(
+                      delegate: SliverChildBuilderDelegate(
+                            (context, index) {
+                          final product = products[index];
 
-                        return Card(
-                          elevation: 3,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          clipBehavior: Clip.antiAlias,
-
-                          child: Column(
-                            crossAxisAlignment:
-                            CrossAxisAlignment.start,
-                            children: [
-                              Expanded(
-                                flex: 6,
-                                child: InkWell(
-                                  onTap: () {
-                                    context.push(
-                                      '/product-details?id=${product.id}',
-                                    );
-                                  },
-                                  child: SizedBox(
-                                    width: double.infinity,
-                                    child: Image.network(
-                                      product.coverPictureUrl,
-                                      fit: BoxFit.cover,
-                                      errorBuilder:
-                                          (context, error, stackTrace) {
-                                        return const Center(
-                                          child: Icon(
-                                            Icons.image_not_supported,
-                                            size: 45,
-                                          ),
-                                        );
-                                      },
+                          return Card(
+                            elevation: 3,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            clipBehavior: Clip.antiAlias,
+                            child: Column(
+                              crossAxisAlignment:
+                              CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                  flex: 6,
+                                  child: InkWell(
+                                    onTap: () {
+                                      context.push(
+                                        '/product-details?id=${product.id}',
+                                      );
+                                    },
+                                    child: SizedBox(
+                                      width: double.infinity,
+                                      child: Image.network(
+                                        product.coverPictureUrl,
+                                        fit: BoxFit.cover,
+                                        errorBuilder:
+                                            (context, error, stackTrace) {
+                                          return const Center(
+                                            child: Icon(
+                                              Icons.image_not_supported,
+                                              size: 45,
+                                            ),
+                                          );
+                                        },
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-
-                              Expanded(
-                                flex: 4,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(10),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                    CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        product.name,
-                                        maxLines: 2,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: const TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-
-                                      const Spacer(),
-
-                                      Row(
-                                        mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            '${product.price} EGP',
-                                            style: const TextStyle(
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.bold,
-                                            ),
+                                Expanded(
+                                  flex: 4,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(10),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          product.name,
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: const TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.bold,
                                           ),
-
-                                          SizedBox(
-                                            width: 38,
-                                            height: 38,
-                                            child: IconButton(
-                                              padding: EdgeInsets.zero,
-                                              onPressed: () {},
-                                              icon: const Icon(
-                                                Icons
-                                                    .shopping_cart_outlined,
-                                                size: 21,
+                                        ),
+                                        const Spacer(),
+                                        Row(
+                                          mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              '${product.price} EGP',
+                                              style: const TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.bold,
                                               ),
                                             ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
+                                            SizedBox(
+                                              width: 38,
+                                              height: 38,
+                                              child: IconButton(
+                                                padding: EdgeInsets.zero,
+                                                onPressed: () {
+                                                  context
+                                                      .read<CartCubit>()
+                                                      .addItemToCart(
+                                                    productId:
+                                                    product.id,
+                                                    quantity: 1,
+                                                  );
+                                                },
+                                                icon: const Icon(
+                                                  Icons
+                                                      .shopping_cart_outlined,
+                                                  size: 21,
+                                                  color:
+                                                  Color(0xFF0B1F3A),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-
-                      childCount: products.length,
-                    ),
-
-                    gridDelegate:
-                    const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 12,
-                      mainAxisSpacing: 12,
-                      childAspectRatio: 0.68,
+                              ],
+                            ),
+                          );
+                        },
+                        childCount: products.length,
+                      ),
+                      gridDelegate:
+                      const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 12,
+                        mainAxisSpacing: 12,
+                        childAspectRatio: 0.68,
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
+                ],
+              ),
 
-            ProductDetailsLoadingState() => const Center(
-              child: CircularProgressIndicator(),
-            ),
+              ProductDetailsLoadingState() => const Center(
+                child: CircularProgressIndicator(),
+              ),
 
-            ProductDetailsSuccessState() => const SizedBox(),
+              ProductDetailsSuccessState() => const SizedBox(),
 
-            ProductDetailsFailureState(:final message) => Center(
-              child: Text(message),
-            ),
+              ProductDetailsFailureState(:final message) => Center(
+                child: Text(message),
+              ),
 
-            _ => const SizedBox.expand(),
-          };
-        },
+              _ => const SizedBox.expand(),
+            };
+          },
+        ),
       ),
     );
   }
@@ -291,7 +314,6 @@ class _ProductsViewState extends State<_ProductsView> {
                 vertical: 10,
               ),
               itemCount: categories.categories.length + 1,
-
               itemBuilder: (context, index) {
                 if (index == 0) {
                   return _categoryItem(
@@ -306,14 +328,12 @@ class _ProductsViewState extends State<_ProductsView> {
                   );
                 }
 
-                final category =
-                categories.categories[index - 1];
+                final category = categories.categories[index - 1];
 
                 return _categoryItem(
                   name: category.name,
                   imageUrl: category.coverPictureUrl,
-                  isSelected:
-                  selectedCategory == category.id,
+                  isSelected: selectedCategory == category.id,
                   onTap: () {
                     setState(() {
                       selectedCategory = category.id;
@@ -338,17 +358,14 @@ class _ProductsViewState extends State<_ProductsView> {
   }) {
     return GestureDetector(
       onTap: onTap,
-
       child: Container(
         width: 90,
         margin: const EdgeInsets.only(right: 12),
-
         child: Column(
           children: [
             Container(
               width: 80,
               height: 80,
-
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
@@ -358,7 +375,6 @@ class _ProductsViewState extends State<_ProductsView> {
                   width: isSelected ? 3 : 1,
                 ),
               ),
-
               child: ClipOval(
                 child: imageUrl == null
                     ? const Icon(
@@ -368,8 +384,7 @@ class _ProductsViewState extends State<_ProductsView> {
                     : Image.network(
                   imageUrl,
                   fit: BoxFit.cover,
-                  errorBuilder:
-                      (context, error, stackTrace) {
+                  errorBuilder: (context, error, stackTrace) {
                     return const Icon(
                       Icons.image_not_supported,
                       size: 40,
@@ -378,20 +393,16 @@ class _ProductsViewState extends State<_ProductsView> {
                 ),
               ),
             ),
-
             const SizedBox(height: 6),
-
             Text(
               name,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.center,
-
               style: TextStyle(
                 fontSize: 17,
-                fontWeight: isSelected
-                    ? FontWeight.bold
-                    : FontWeight.normal,
+                fontWeight:
+                isSelected ? FontWeight.bold : FontWeight.normal,
               ),
             ),
           ],

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mm_2/features/cart/presentation/cubit/cart_cubit.dart';
+import 'package:mm_2/features/cart/presentation/cubit/cart_state.dart';
 import 'package:mm_2/features/products/peresentation/cubit/product_cubit.dart';
 import 'package:mm_2/features/products/peresentation/cubit/product_state.dart';
 import 'package:mm_2/features/auth/presentation/screens/settings_screen.dart';
@@ -100,17 +102,51 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
 
                         const SizedBox(height: 24),
 
-                        SizedBox(
-                          width: double.infinity,
-                          height: 55,
-                          child: FilledButton(
-                            onPressed: () {},
-                            style: FilledButton.styleFrom(
-                              backgroundColor: const Color(0xFF0B1F3A),
-                              foregroundColor: Colors.white,
-                            ),
-                            child: const Text('Add To Cart'),
-                          ),
+                        BlocConsumer<CartCubit, CartState>(
+                          listener: (context, state) {
+                            if (state is CartAddSuccessState) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Product added to cart'),
+                                ),
+                              );
+                            }
+
+                            if (state is CartFailureState) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(state.message),
+                                ),
+                              );
+                            }
+                          },
+                          builder: (context, state) {
+                            final isLoading = state is CartLoadingState;
+
+                            return SizedBox(
+                              width: double.infinity,
+                              height: 55,
+                              child: FilledButton(
+                                onPressed: isLoading
+                                    ? null
+                                    : () {
+                                  context.read<CartCubit>().addItemToCart(
+                                    productId: details.id,
+                                    quantity: 1,
+                                  );
+                                },
+                                style: FilledButton.styleFrom(
+                                  backgroundColor: const Color(0xFF0B1F3A),
+                                  foregroundColor: Colors.white,
+                                ),
+                                child: isLoading
+                                    ? const CircularProgressIndicator(
+                                  color: Colors.white,
+                                )
+                                    : const Text('Add To Cart'),
+                              ),
+                            );
+                          },
                         ),
                       ],
                     ),

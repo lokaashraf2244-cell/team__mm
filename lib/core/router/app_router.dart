@@ -14,12 +14,14 @@ import 'package:mm_2/features/products/peresentation/cubit/product_cubit.dart';
 
 import 'package:mm_2/features/categories/presentation/cubit/categories_cubit.dart';
 
+import 'package:mm_2/features/cart/presentation/cubit/cart_cubit.dart';
+import 'package:mm_2/features/cart/presentation/screens/cart_screen.dart';
+
 final navigatorKey = GlobalKey<NavigatorState>();
 
 class AppRouter {
   static final GoRouter appRouter = GoRouter(
     initialLocation: "/login",
-
     routes: [
       GoRoute(
         path: "/login",
@@ -36,12 +38,11 @@ class AppRouter {
           return const SignUpScreen();
         },
       ),
+
       GoRoute(
         path: "/verification",
         name: "verification",
-
         builder: (context, state) {
-
           final email =
               state.uri.queryParameters['email'] ?? '';
 
@@ -56,13 +57,9 @@ class AppRouter {
       ),
 
       ShellRoute(
-
-        builder:
-            (context, state, child) {
-
+        builder: (context, state, child) {
           return MultiBlocProvider(
             providers: [
-
               BlocProvider<ProductCubit>(
                 create: (_) =>
                     getIt<ProductCubit>(),
@@ -72,36 +69,43 @@ class AppRouter {
                 create: (_) =>
                     getIt<CategoriesCubit>(),
               ),
-            ],
 
+              BlocProvider<CartCubit>(
+                create: (_) =>
+                    getIt<CartCubit>(),
+              ),
+            ],
             child: child,
           );
         },
 
         routes: [
-
           GoRoute(
             path: "/products",
             name: "products",
-
             builder: (context, state) {
               return const ProductsScreen();
             },
           ),
 
-
           GoRoute(
             path: "/product-details",
             name: "productDetails",
-
             builder: (context, state) {
-
               final String? id =
               state.uri.queryParameters['id'];
 
               return ProductDetailsScreen(
                 productId: id ?? "",
               );
+            },
+          ),
+
+          GoRoute(
+            path: "/cart",
+            name: "cart",
+            builder: (context, state) {
+              return const CartScreen();
             },
           ),
         ],

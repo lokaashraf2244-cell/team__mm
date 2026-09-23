@@ -1,7 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-
-import '../errors/failure.dart';
+import 'package:mm_2/core/errors/failure.dart';
 import 'api_consumer.dart';
 
 class DioConsumer implements ApiConsumer {
