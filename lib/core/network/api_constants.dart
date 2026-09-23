@@ -9,6 +9,10 @@ class ApiConstants {
 
   static const String products = '/api/products';
   static const String categories = '/api/categories';
+  static const String addItemToCart = '/api/cart/items';
+  static const String getCart = '/api/cart';
+
+
 
 
   static String productDetails(String id) {

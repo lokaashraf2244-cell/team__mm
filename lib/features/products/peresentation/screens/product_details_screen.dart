@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mm_2/features/cart/presentation/cubit/cart_cubit.dart';
+import 'package:mm_2/features/cart/presentation/cubit/cart_state.dart';
 import 'package:mm_2/features/products/peresentation/cubit/product_cubit.dart';
 import 'package:mm_2/features/products/peresentation/cubit/product_state.dart';
+import 'package:mm_2/features/auth/presentation/screens/settings_screen.dart';
 class ProductDetailsScreen extends StatefulWidget {
   const ProductDetailsScreen({
     super.key,
@@ -28,6 +31,18 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.settings),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const SettingsScreen(),
+              ),
+            );
+          },
+        ),
+
         title: const Text('Product Details'),
         centerTitle: true,
       ),
@@ -61,7 +76,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         Text(
                           details.name,
                           style: const TextStyle(
-                            fontSize: 22,
+                            fontSize: 27,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -71,7 +86,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         Text(
                           details.description,
                           style: const TextStyle(
-                            fontSize: 16,
+                            fontSize: 20,
                           ),
                         ),
 
@@ -80,20 +95,58 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         Text(
                           '${details.price} EGP',
                           style: const TextStyle(
-                            fontSize: 18,
+                            fontSize: 19,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
 
                         const SizedBox(height: 24),
 
-                        SizedBox(
-                          width: double.infinity,
-                          height: 55,
-                          child: FilledButton(
-                            onPressed: () {},
-                            child: const Text('Add To Cart'),
-                          ),
+                        BlocConsumer<CartCubit, CartState>(
+                          listener: (context, state) {
+                            if (state is CartAddSuccessState) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Product added to cart'),
+                                ),
+                              );
+                            }
+
+                            if (state is CartFailureState) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(state.message),
+                                ),
+                              );
+                            }
+                          },
+                          builder: (context, state) {
+                            final isLoading = state is CartLoadingState;
+
+                            return SizedBox(
+                              width: double.infinity,
+                              height: 55,
+                              child: FilledButton(
+                                onPressed: isLoading
+                                    ? null
+                                    : () {
+                                  context.read<CartCubit>().addItemToCart(
+                                    productId: details.id,
+                                    quantity: 1,
+                                  );
+                                },
+                                style: FilledButton.styleFrom(
+                                  backgroundColor: const Color(0xFF0B1F3A),
+                                  foregroundColor: Colors.white,
+                                ),
+                                child: isLoading
+                                    ? const CircularProgressIndicator(
+                                  color: Colors.white,
+                                )
+                                    : const Text('Add To Cart'),
+                              ),
+                            );
+                          },
                         ),
                       ],
                     ),

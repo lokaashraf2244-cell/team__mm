@@ -4,8 +4,6 @@ import '../models/signup_req.dart';
 import '../models/verify_req.dart';
 import '../models/resend.dart';
 import 'package:mm_2/core/errors/failure.dart';
-
-
 abstract class AuthRemoteDataSource {
   Future<Either<Failure, dynamic>> login(
       LoginRequest request,

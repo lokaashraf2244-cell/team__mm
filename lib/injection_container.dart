@@ -14,10 +14,26 @@ import 'package:mm_2/features/products/domain/usecase/get_product_details.dart';
 import 'package:mm_2/features/products/peresentation/cubit/product_cubit.dart';
 
 import 'package:mm_2/features/categories/data/data_source/categories_data_source.dart';
-
+import 'package:mm_2/features/categories/data/data_source/categories_data_source_imp.dart';
 import 'package:mm_2/features/categories/data/repos/categories_repo_imp.dart';
 import 'package:mm_2/features/categories/domain/reposatories/categories_repo.dart';
 import 'package:mm_2/features/categories/presentation/cubit/categories_cubit.dart';
+
+import 'package:mm_2/features/auth/data/data_source/auth_remote_data_source.dart';
+import 'package:mm_2/features/auth/data/data_source/auth_remote_data_source_imp.dart';
+import 'package:mm_2/features/auth/data/repos/auth_repo_imp.dart';
+import 'package:mm_2/features/auth/domain/reposatories/auth_repo.dart';
+import 'package:mm_2/features/auth/domain/usecase/login.dart';
+import 'package:mm_2/features/auth/domain/usecase/signup.dart';
+import 'package:mm_2/features/auth/domain/usecase/verify_email.dart';
+import 'package:mm_2/features/auth/domain/usecase/resend_otp.dart';
+import 'package:mm_2/features/auth/presentation/cubit/auth_cubit.dart';
+
+import 'package:mm_2/features/cart/data/data_source/cart_data_source.dart';
+import 'package:mm_2/features/cart/data/data_source/cart_data_source_imp.dart';
+import 'package:mm_2/features/cart/data/repos/cart_repo_imp.dart';
+import 'package:mm_2/features/cart/domain/repos/cart_repo.dart';
+import 'package:mm_2/features/cart/presentation/cubit/cart_cubit.dart';
 
 final getIt = GetIt.instance;
 
@@ -63,6 +79,12 @@ Future<void> initDependencies() async {
     ),
   );
 
+  getIt.registerLazySingleton<CategoriesDataSource>(
+        () => CategoryDataSourceImpl(
+      getIt<ApiConsumer>(),
+    ),
+  );
+
   getIt.registerLazySingleton<Categoriesrepo>(
         () => CategoriesRepoImpl(
       categoriesDataSource: getIt<CategoriesDataSource>(),
@@ -72,6 +94,69 @@ Future<void> initDependencies() async {
   getIt.registerFactory<CategoriesCubit>(
         () => CategoriesCubit(
       categoriesRepo: getIt<Categoriesrepo>(),
+    ),
+  );
+
+  getIt.registerLazySingleton<AuthRemoteDataSource>(
+        () => AuthDataSourceImpl(
+      getIt<ApiConsumer>(),
+    ),
+  );
+
+  getIt.registerLazySingleton<AuthRepository>(
+        () => AuthRepositoryImpl(
+      remoteDataSource: getIt<AuthRemoteDataSource>(),
+    ),
+  );
+
+  getIt.registerLazySingleton<Login>(
+        () => Login(
+      getIt<AuthRepository>(),
+    ),
+  );
+
+  getIt.registerLazySingleton<SignUp>(
+        () => SignUp(
+      getIt<AuthRepository>(),
+    ),
+  );
+
+  getIt.registerLazySingleton<VerifyEmail>(
+        () => VerifyEmail(
+      getIt<AuthRepository>(),
+    ),
+  );
+
+  getIt.registerLazySingleton<ResendOtp>(
+        () => ResendOtp(
+      getIt<AuthRepository>(),
+    ),
+  );
+
+  getIt.registerFactory<AuthCubit>(
+        () => AuthCubit(
+      loginUseCase: getIt<Login>(),
+      signUpUseCase: getIt<SignUp>(),
+      verifyEmailUseCase: getIt<VerifyEmail>(),
+      resendOtpUseCase: getIt<ResendOtp>(),
+    ),
+  );
+
+  getIt.registerLazySingleton<CartDataSource>(
+        () => CartDataSourceImpl(
+      getIt<ApiConsumer>(),
+    ),
+  );
+
+  getIt.registerLazySingleton<CartRepo>(
+        () => CartRepoImpl(
+      cartDataSource: getIt<CartDataSource>(),
+    ),
+  );
+
+  getIt.registerFactory<CartCubit>(
+        () => CartCubit(
+      cartRepo: getIt<CartRepo>(),
     ),
   );
 }
