@@ -25,7 +25,6 @@ class AuthDataSourceImpl implements AuthRemoteDataSource {
         'password': request.password,
       },
     );
-
     return response;
   }
 
