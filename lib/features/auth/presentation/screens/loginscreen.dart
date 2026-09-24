@@ -6,7 +6,10 @@ import 'package:mm_2/core/cubit/theme/theme_cubit.dart';
 import 'package:mm_2/core/cubit/theme/theme_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mm_2/features/products/peresentation/screens/products_screen.dart';
-
+import 'package:mm_2/features/auth/presentation/cubit/auth_cubit.dart';
+import 'package:mm_2/features/auth/data/models/login_req.dart';
+import 'package:mm_2/features/auth/presentation/cubit/auth_state.dart';
+import 'package:go_router/go_router.dart';
 class loginscreen extends StatefulWidget{
   const loginscreen({super.key});
   @override
@@ -26,7 +29,15 @@ class _loginscreenState extends State<loginscreen> {
   bool isChecked = false;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return BlocListener<AuthCubit, AuthState>(
+        listener: (context, state) {
+          if (state is AuthSuccess) {
+            context.pushReplacementNamed('products');
+          }
+        },
+
+        child: Scaffold(
+
         backgroundColor: Theme
             .of(context)
             .scaffoldBackgroundColor,
@@ -243,15 +254,16 @@ class _loginscreenState extends State<loginscreen> {
                       height: 50,
                       child: ElevatedButton(
                         onPressed: () {
-                          if (formKey.currentState!.validate()) {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const ProductsScreen(),
-                              ),
-                            );
-                          }
-                        },
+                        if (formKey.currentState!.validate()) {
+                          context.read<AuthCubit>().login(
+                            LoginRequest(
+                              email: emailcontroller.text.trim(),
+                              password: passcontroller.text,
+                            ),
+                          );
+                        }
+                      },
+
                         style: ElevatedButton.styleFrom(
                           backgroundColor:  const Color(0xFF0B1F3A),
                           foregroundColor: Colors.white,
@@ -298,7 +310,7 @@ class _loginscreenState extends State<loginscreen> {
                             'Sign Up',
                             style: TextStyle(
                               fontSize: 13,
-                              color: Color(0xFF0B1F3A),
+                              color: Color(0xFF24466A ),
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -312,6 +324,6 @@ class _loginscreenState extends State<loginscreen> {
 
           ),
         )
-    );
-  }
+    ));
+    }
 }

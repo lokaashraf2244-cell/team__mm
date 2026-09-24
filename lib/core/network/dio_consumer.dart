@@ -74,6 +74,7 @@ class DioConsumer implements ApiConsumer {
   Future<Either<Failure, Map<String, dynamic>>> post({
     required String path,
     Map<String, dynamic>? data,
+    Map<String, dynamic>? headers,
   }) async {
     print('post called');
     print('path: $path');
@@ -133,6 +134,7 @@ class DioConsumer implements ApiConsumer {
   Future<Either<Failure, Map<String, dynamic>>> put({
     required String path,
     Map<String, dynamic>? data,
+    Map<String, dynamic>? headers,
   }) async {
     print('put called');
     print('path: $path');
@@ -192,6 +194,7 @@ class DioConsumer implements ApiConsumer {
   Future<Either<Failure, Map<String, dynamic>>> delete({
     required String path,
     Map<String, dynamic>? data,
+    Map<String, dynamic>? headers,
   }) async {
     print('delete called');
     print('path: $path');

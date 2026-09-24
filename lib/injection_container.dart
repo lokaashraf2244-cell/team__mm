@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
-
+import 'package:mm_2/features/auth/data/external/interceptor.dart';
 import 'package:mm_2/core/network/api_consumer.dart';
 import 'package:mm_2/core/network/dio_consumer.dart';
 import 'package:mm_2/core/network/dio_factory.dart';
@@ -18,7 +18,6 @@ import 'package:mm_2/features/categories/data/data_source/categories_data_source
 import 'package:mm_2/features/categories/data/repos/categories_repo_imp.dart';
 import 'package:mm_2/features/categories/domain/reposatories/categories_repo.dart';
 import 'package:mm_2/features/categories/presentation/cubit/categories_cubit.dart';
-
 import 'package:mm_2/features/auth/data/data_source/auth_remote_data_source.dart';
 import 'package:mm_2/features/auth/data/data_source/auth_remote_data_source_imp.dart';
 import 'package:mm_2/features/auth/data/repos/auth_repo_imp.dart';
@@ -28,19 +27,30 @@ import 'package:mm_2/features/auth/domain/usecase/signup.dart';
 import 'package:mm_2/features/auth/domain/usecase/verify_email.dart';
 import 'package:mm_2/features/auth/domain/usecase/resend_otp.dart';
 import 'package:mm_2/features/auth/presentation/cubit/auth_cubit.dart';
-
-import 'package:mm_2/features/cart/data/data_source/cart_data_source.dart';
-import 'package:mm_2/features/cart/data/data_source/cart_data_source_imp.dart';
-import 'package:mm_2/features/cart/data/repos/cart_repo_imp.dart';
-import 'package:mm_2/features/cart/domain/repos/cart_repo.dart';
-import 'package:mm_2/features/cart/presentation/cubit/cart_cubit.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
+import 'core/local_storage/base_local_storage.dart';
+import 'features/auth/data/local_storage/shared_pref_impl.dart';
+import 'features/cart/data/data_source/cart_data_source.dart';
+import 'features/cart/data/data_source/cart_data_source_imp.dart';
+import 'features/cart/data/repos/cart_repo_imp.dart';
+import 'features/cart/domain/repos/cart_repo.dart';
+import 'features/cart/presentation/cubit/cart_cubit.dart';
 final getIt = GetIt.instance;
 
 Future<void> initDependencies() async {
-  getIt.registerLazySingleton<Dio>(
-        () => DioFactory.create(),
+  final sharedPreferences =
+  await SharedPreferences.getInstance();
+
+  getIt.registerLazySingleton<BaseLocalStorage>(
+        () => SharedPrefsLocalStorageImpl(
+      preferences: sharedPreferences,
+    ),
   );
+  getIt.registerLazySingleton<Dio>(
+        () => DioFactory.create(localStorage: getIt<BaseLocalStorage>(),),
+  );
+
+
 
   getIt.registerLazySingleton<ApiConsumer>(
         () => DioConsumer(
@@ -139,6 +149,7 @@ Future<void> initDependencies() async {
       signUpUseCase: getIt<SignUp>(),
       verifyEmailUseCase: getIt<VerifyEmail>(),
       resendOtpUseCase: getIt<ResendOtp>(),
+          localStorage: getIt<BaseLocalStorage>(),
     ),
   );
 

@@ -8,9 +8,7 @@ import 'package:mm_2/features/auth/presentation/cubit/auth_cubit.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   await initDependencies();
-
   runApp(
     MultiBlocProvider(
       providers: [
