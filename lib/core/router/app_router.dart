@@ -80,29 +80,10 @@ class AppRouter {
       ),
 
       ShellRoute(
-        builder: (context, state, child) {
-          return MultiBlocProvider(
-            providers: [
-              BlocProvider<ProductCubit>(
-                create: (_) =>
-                    getIt<ProductCubit>(),
-              ),
 
-              BlocProvider<CategoriesCubit>(
-                create: (_) =>
-                    getIt<CategoriesCubit>(),
-              ),
-
-              BlocProvider<CartCubit>(
-                create: (_) =>
-                    getIt<CartCubit>(),
-              ),
-            ],
-            child: child,
-          );
-        },
 
         routes: [
+
           GoRoute(
             path: "/products",
             name: "products",
@@ -110,8 +91,7 @@ class AppRouter {
               return const ProductsScreen();
             },
           ),
-
-          GoRoute(
+         /*GoRoute(
             path: "/product-details",
             name: "productDetails",
             builder: (context, state) {
@@ -124,7 +104,7 @@ class AppRouter {
             },
           ),
 
-
+*/
         ],
       ),
 StatefulShellRoute.indexedStack(
@@ -143,6 +123,29 @@ name: 'home',
 builder: (context, state) {
 return const ProductsScreen();
 },
+  routes: [
+    GoRoute(
+      path: 'product-details',
+      name: 'productDetails',
+      builder: (context, state) {
+        final id =
+            state.uri.queryParameters['id'] ?? '';
+        return MultiBlocProvider(
+          providers: [
+            BlocProvider<ProductCubit>(
+              create: (_) => getIt<ProductCubit>(),
+            ),
+            BlocProvider<CartCubit>(
+              create: (_) => getIt<CartCubit>(),
+            ),
+          ],
+          child: ProductDetailsScreen(
+            productId: id,
+          ),
+        );
+      },
+    ),
+  ],
 ),
 ],
 ),
