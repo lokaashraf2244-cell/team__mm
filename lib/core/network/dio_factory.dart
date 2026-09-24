@@ -1,9 +1,12 @@
 import 'package:dio/dio.dart';
-
+import '../../features/auth/data/external/interceptor.dart';
+import '../local_storage/base_local_storage.dart';
 import 'api_constants.dart';
 
 class DioFactory {
-  static Dio create() {
+  static Dio create( {required BaseLocalStorage localStorage,
+  } ) {
+
     final dio = Dio(
       BaseOptions(
         baseUrl: ApiConstants.baseUrl,
@@ -13,6 +16,12 @@ class DioFactory {
 
           'Accept': 'application/json',
         },
+      ),
+    );
+
+    dio.interceptors.add(
+      AppInterceptors(
+        localStorage: localStorage,
       ),
     );
 

@@ -39,8 +39,9 @@ class CartCubit extends Cubit<CartState> {
           (failure) {
         emit(CartFailureState(failure.msg));
       },
-          (cart) {
+          (cart) async  {
         emit(CartAddSuccessState(cart));
+        await getCart();
       },
     );
   }
