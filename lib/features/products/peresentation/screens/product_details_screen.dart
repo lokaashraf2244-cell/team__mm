@@ -145,7 +145,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                 )
                                     : const Text('Add To Cart'),
                               ),
+
                             );
+
                           },
                         ),
                       ],

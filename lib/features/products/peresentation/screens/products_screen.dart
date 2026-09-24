@@ -169,7 +169,7 @@ class _ProductsViewState extends State<_ProductsView> {
                                   child: InkWell(
                                     onTap: () {
                                       context.push(
-                                        '/product-details?id=${product.id}',
+                                        '/home/product-details?id=${product.id}',
                                       );
                                     },
                                     child: SizedBox(

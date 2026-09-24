@@ -16,7 +16,7 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   Future<void> navigate() async {
-    //await widget._localStorage.clear();//تتشال يا مريم
+    await widget._localStorage.clear();//تتشال يا مريم
     final bool? isOpen = await widget._localStorage.getBool(LocalKeys.isOpen);
     final String? token =
     await widget._localStorage.getString(LocalKeys.token);

@@ -32,7 +32,8 @@ class _loginscreenState extends State<loginscreen> {
     return BlocListener<AuthCubit, AuthState>(
         listener: (context, state) {
           if (state is AuthSuccess) {
-            context.pushReplacementNamed('products');
+            context.go('/home');
+
           }
         },
 
